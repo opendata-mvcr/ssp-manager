@@ -137,11 +137,12 @@ const TableRow = ({data, labels}) => {
         ));
     });
     subClassOf.splice(subClassOf.length - 1, 1);
-    // TODO Select label using language
+    const iri =  "https://skod.opendata.cz/ssp?iri=" +
+        encodeURIComponent(data["@id"]);
     return (
         <tr>
             <td>
-                <a href={data["@id"]}>{selectLabel(labels, data)}</a>
+                <a href={iri}>{selectLabel(labels, data)}</a>
             </td>
             <td>{usedInGlossary}</td>
             <td>{subClassOf}</td>
