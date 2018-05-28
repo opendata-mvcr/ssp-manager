@@ -6,7 +6,7 @@ let cache = null;
 
 export function initializeCache() {
     if (cache === null) {
-        return getJson("/api/v1/concepts").then((payload) => {
+        return getJson("./api/v1/concepts").then((payload) => {
             cache = [];
             addDataToCache(payload);
         });

@@ -12,7 +12,7 @@ export function createRouter(history) {
                     {getRegisteredRoutes().map((entry) => (
                         <Route key={entry.url}
                                path={entry.url}
-                               exact={true}
+                               exact={false}
                                component={entry.component}
                         />
                     ))}
