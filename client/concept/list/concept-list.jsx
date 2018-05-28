@@ -55,15 +55,15 @@ const ConceptGroup = ({scheme, data, labels}) => {
                 </a>
             </h2>
             <ConceptTable
-                title="Typ objekt"
+                title="Typ objektu"
                 data={dataByType[SSP.Object]}
                 labels={labels}/>
             <ConceptTable
-                title="Typ vlastnost"
+                title="Typ vlastnosti"
                 data={dataByType[SSP.Property]}
                 labels={labels}/>
             <ConceptTable
-                title="Typ vztah"
+                title="Typ vztahu"
                 data={dataByType[SSP.Relation]}
                 labels={labels}/>
         </div>
