@@ -1,0 +1,41 @@
+{
+  "name": "semantic-vocabulary-editor",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.develop.js",
+    "build": "webpack --config webpack.production.js",
+    "start": "node server.production.js"
+  },
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "body-parser": "^1.18.3",
+    "bootstrap": "^4.1.1",
+    "css-loader": "^0.28.11",
+    "es6-promise": "^4.2.4",
+    "express": "^4.16.3",
+    "history": "^4.7.2",
+    "query-string": "^6.1.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "reactstrap": "^6.0.1",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.2.0",
+    "request": "^2.87.0",
+    "style-loader": "^0.21.0",
+    "thunk": "0.0.1",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-middleware": "^3.1.3",
+    "webpack-merge": "^4.1.2"
+  }
+}
