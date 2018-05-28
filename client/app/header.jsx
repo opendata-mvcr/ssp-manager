@@ -27,7 +27,7 @@ export class Header extends React.Component {
                     <input className="form-control mr-2"
                            style={{"width": "20rem"}}
                            type="search"
-                           placeholder="kandidát"
+                           placeholder="Hledaný pojem"
                            aria-label="Hledej"
                            ref={(input) => this.searchText = input}
                     />
