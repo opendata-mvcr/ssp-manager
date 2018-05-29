@@ -7,6 +7,11 @@
     "build": "webpack --config build/webpack.production.js",
     "start": "node server/server.production.js"
   },
+  "bugs": {
+    "url": "https://github.com/opendata-mvcr/ssp-manager/issues"
+  },
+  "license": "MIT-0",
+  "repository": "github:opendata-mvcr/ssp-manager",
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
