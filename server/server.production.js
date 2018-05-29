@@ -2,7 +2,7 @@
     const express = require("express");
     const app = express();
 
-    const server = require("./server/server");
+    const server = require("./server.common");
     server.initializeApi(app);
     initializeBundlePath(app);
     server.initializeStatic(app);
@@ -12,12 +12,12 @@
 function initializeBundlePath(app) {
     const path = require("path");
     app.get("/bundle.js", (req, res) => {
-        res.sendFile(path.join(__dirname, "public", "bundle.js"));
+        res.sendFile(path.join(__dirname, "..", "public", "bundle.js"));
     });
 }
 
 function start(app) {
-    const config = require("./server/config");
+    const config = require("./config");
     const port = config.port;
     app.listen(port, function onStart(error) {
         if (error) {

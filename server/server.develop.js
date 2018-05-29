@@ -3,7 +3,7 @@
     const express = require("express");
     const app = express();
 
-    const server = require("./server/server");
+    const server = require("./server.common");
     server.initializeApi(app);
     initializeWebpack(app);
     server.initializeStatic(app);
@@ -12,7 +12,7 @@
 
 function initializeWebpack(app) {
     const webpack = require("webpack");
-    const webpackConfig = require("./webpack.develop.js");
+    const webpackConfig = require("../build/webpack.develop.js");
     const webpackMiddleware = require("webpack-dev-middleware");
     const compiler = webpack(webpackConfig);
     app.use(webpackMiddleware(compiler, {
