@@ -3,8 +3,8 @@
 
 # IntelliJ IDEA files.
 *.iml
-
-# Generated files.
-node_modules/
-public/*.js
 .idea/
+
+# Generated directories.
+node_modules/
+dist/

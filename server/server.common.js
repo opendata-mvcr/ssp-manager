@@ -1,5 +1,3 @@
-const path = require("path");
-
 function initializeApi(app) {
     initializeParsers(app);
     initializeApiRoutes(app);
@@ -18,13 +16,6 @@ function initializeApiRoutes(app) {
     app.use("/api/v1/labels", require("./routes/labels"));
 }
 
-
-function initializeStatic(app) {
-    app.get("/*", (req, res) => {
-        res.sendFile(path.join(__dirname, "..", "public", "index.html"));
-    });
-}
-
 function start(app) {
     const config = require("./config");
     const port = config.port;
@@ -38,6 +29,5 @@ function start(app) {
 
 module.exports = {
     "initializeApi" : initializeApi,
-    "initializeStatic" : initializeStatic,
     "start": start
 };

@@ -1,51 +1,60 @@
+const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const common = Object.assign({}, require("./webpack.common"));
 
-
 module.exports = merge(common, {
     "mode": "production",
-    "stats": {
-        "colors": true,
-        "hash": true,
-        "timings": true,
-        "assets": true,
-        "chunks": true,
-        "chunkModules": true,
-        "modules": true,
-        "children": true
+    "output": {
+        "filename": "bundle.[chunkhash].js",
     },
     "optimization": {
-        "minimizer": [
-            new UglifyJSPlugin({
-                "sourceMap": true,
-                "uglifyOptions": {
-                    "compress": {
-                        "inline": false
-                    }
-                }
-            })
-        ],
-        "runtimeChunk": false,
         "splitChunks": {
             "cacheGroups": {
-                "default": false,
                 "commons": {
                     "test": /[\\/]node_modules[\\/]/,
-                    "name": "vendor_app",
+                    "name": "vendor",
                     "chunks": "all",
-                    "minChunks": 2
+                    "filename": "commons.[chunkhash].js"
                 }
             }
-        }
+        },
+        "minimizer": [
+            new UglifyJsPlugin({
+                "cache": true,
+                "parallel": true,
+                "sourceMap": true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ]
+    },
+    "module": {
+        "rules": [
+            {
+                "test": /\.css?$/,
+                "use": [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader"
+                ]
+            }
+        ]
     },
     "plugins": [
+        new CleanWebpackPlugin([common.output.path], {
+            "root": path.join(__dirname, "..")
+        }),
+        new MiniCssExtractPlugin({
+            "filename": "main.[hash].css"
+        }),
         new webpack.DefinePlugin({
             "process.env": {
-                NODE_ENV: JSON.stringify("production")
-            },
+                "NODE_ENV": '"production"'
+            }
         })
     ]
 });
