@@ -8,7 +8,7 @@ import {
 } from "./concept-list-reducer"
 import {isLoading, hasFailed} from "app-service/http";
 import {ConceptListComponent} from "./concept-list";
-import {labelsSelector} from "labels";
+import {labelsSelector} from "app-service/labels";
 import {parse as parseQueryString} from "query-string";
 import {LoadingIndicator} from "app-ui/loading";
 

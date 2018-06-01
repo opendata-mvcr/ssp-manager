@@ -1,6 +1,6 @@
 import {initializeCache, selectEntries} from "../concepts-cache";
 import {loadEntities} from "../concept-api";
-import {fetchLabel} from "labels";
+import {fetchLabel} from "app-service/labels";
 
 export const FETCH_CONCEPTS_REQUEST = "FETCH_CONCEPTS_REQUEST";
 export const FETCH_CONCEPTS_SUCCESS = "FETCH_CONCEPTS_SUCCESS";

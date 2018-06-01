@@ -3,4 +3,4 @@
  *  must import app/register and register immediately after import.
  */
 import "./concept/list";
-import "./labels"
+import "./app-service/labels"

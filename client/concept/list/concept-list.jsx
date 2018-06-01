@@ -2,7 +2,7 @@ import React from "react";
 import {PropTypes} from "prop-types";
 import {SSP} from "../vocabulary";
 import {Container} from "reactstrap";
-import {selectLabel} from "labels";
+import {selectLabel} from "app-service/labels";
 
 export const ConceptListComponent = ({data, labels}) => {
     if (data.length === 0){
