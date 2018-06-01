@@ -2,6 +2,7 @@ import React from "react";
 import {Header} from "./header";
 import {connect} from "react-redux";
 import {push} from "react-router-redux";
+import { hot } from "react-hot-loader";
 
 function _DefaultLayout(props) {
     return (
@@ -13,6 +14,7 @@ function _DefaultLayout(props) {
     )
 }
 
-export const DefaultLayout = connect(null, (dispatch, ownProps) => ({
+export const DefaultLayout = hot(module)(connect(null, (dispatch, ownProps) => ({
     "onSearch": (searchText) => dispatch(push('?search=' + searchText))
-}))(_DefaultLayout);
+}))(_DefaultLayout));
+

@@ -17,4 +17,7 @@ function initializeWebpack(app) {
     app.use(webpackMiddleware(webpackCompiler, {
         "publicPath": webpackConfig.output.publicPath,
     }));
+    // https://github.com/webpack-contrib/webpack-hot-middleware
+    const webpackHotMiddleware = require("webpack-hot-middleware");
+    app.use(webpackHotMiddleware(webpackCompiler));
 }
