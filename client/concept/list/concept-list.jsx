@@ -4,10 +4,10 @@ import {SSP} from "../vocabulary";
 import {Container} from "reactstrap";
 import {selectLabel} from "app-service/labels";
 
-export const ConceptListComponent = ({data, labels}) => {
-    if (data.length === 0){
+export const ConceptListComponent = ({data, labels, entities}) => {
+    if (data.length === 0) {
         return (
-            <div style={{"marginTop" : "4rem", "textAlign": "center"}}>
+            <div style={{"marginTop": "4rem", "textAlign": "center"}}>
                 Začni vyhledáním pojmu, v pravém horním rohu.
             </div>
         )
@@ -20,7 +20,8 @@ export const ConceptListComponent = ({data, labels}) => {
                     key={key}
                     scheme={key}
                     data={groups[key]}
-                    labels={labels}/>
+                    labels={labels}
+                    entities={entities}/>
             ))}
         </Container>
     )
@@ -28,7 +29,8 @@ export const ConceptListComponent = ({data, labels}) => {
 
 ConceptListComponent.propTypes = {
     "data": PropTypes.array.isRequired,
-    "labels": PropTypes.any.isRequired
+    "labels": PropTypes.any.isRequired,
+    "entities": PropTypes.object.isRequired
 };
 
 function splitByScheme(data) {
@@ -45,7 +47,7 @@ function splitByScheme(data) {
     return output;
 }
 
-const ConceptGroup = ({scheme, data, labels}) => {
+const ConceptGroup = ({scheme, data, labels, entities}) => {
     const dataByType = splitByType(data);
     return (
         <div>
@@ -57,15 +59,18 @@ const ConceptGroup = ({scheme, data, labels}) => {
             <ConceptTable
                 title="Typ objektu"
                 data={dataByType[SSP.Object]}
-                labels={labels}/>
+                labels={labels}
+                entities={entities}/>
             <ConceptTable
                 title="Typ vlastnosti"
                 data={dataByType[SSP.Property]}
-                labels={labels}/>
+                labels={labels}
+                entities={entities}/>
             <ConceptTable
                 title="Typ vztahu"
                 data={dataByType[SSP.Relation]}
-                labels={labels}/>
+                labels={labels}
+                entities={entities}/>
         </div>
     )
 };
@@ -90,7 +95,7 @@ function splitByType(data) {
 
 }
 
-const ConceptTable = ({title, data, labels}) => {
+const ConceptTable = ({title, data, labels, entities}) => {
     if (data.length === 0) {
         return null;
     }
@@ -109,7 +114,8 @@ const ConceptTable = ({title, data, labels}) => {
                 </thead>
                 <tbody>
                 {data.map((item) => (
-                    <TableRow key={item["@id"]} data={item} labels={labels}/>
+                    <TableRow key={item["@id"]} data={item} labels={labels}
+                              entities={entities}/>
                 ))}
                 </tbody>
             </table>
@@ -117,18 +123,8 @@ const ConceptTable = ({title, data, labels}) => {
     );
 };
 
-const TableRow = ({data, labels}) => {
-    const subClassOf = [];
-    data["subClassOf"].forEach((iri) => {
-        subClassOf.push((
-            <a href={iri} target="_blank" key={iri}>
-                {selectLabel(labels, iri)}
-            </a>
-        ));
-        subClassOf.push((
-            <br key={iri + "-br"}/>
-        ));
-    });
+const TableRow = ({data, labels, entities}) => {
+    const subClassOf = createSubClassOfCell(data, labels, entities);
     const usedInGlossary = [];
     data["usedInGlossary"].forEach((iri) => {
         usedInGlossary.push(selectLabel(labels, iri));
@@ -136,8 +132,8 @@ const TableRow = ({data, labels}) => {
             <br key={iri + "-br"}/>
         ));
     });
-    subClassOf.splice(subClassOf.length - 1, 1);
-    const iri =  "https://skod.opendata.cz/ssp?iri=" +
+
+    const iri = "https://skod.opendata.cz/ssp?iri=" +
         encodeURIComponent(data["@id"]);
     return (
         <tr>
@@ -151,7 +147,50 @@ const TableRow = ({data, labels}) => {
     )
 };
 
+function createSubClassOfCell(data, labels, entities) {
+    const subClassOf = [];
+    data["subClassOf"].forEach((iri) => {
+        if (subClassOf.length > 0) {
+            subClassOf.push((
+                <br key={iri + "-br"}/>
+            ));
+        }
 
+        subClassOf.push((
+            <a href={iri} target="_blank" key={iri}>
+                {prepareLabelForConcept(labels, iri)}
+            </a>
+        ));
+
+        const concept = entities[iri];
+        if (concept !== undefined && concept["scheme"].length > 0) {
+            subClassOf.push(" (");
+            let isFirst = true;
+            concept["scheme"].forEach((scheme) => {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    subClassOf.push(" ,");
+                }
+                subClassOf.push((
+                    <a href={scheme} target="_blank" key={iri + "-scheme"}>
+                        {selectLabel(labels, scheme)}
+                    </a>
+                ));
+            });
+            subClassOf.push(")");
+        }
+    });
+    return subClassOf;
+}
+
+function prepareLabelForConcept(labels, iri) {
+    const label = selectLabel(labels, iri);
+    if (label !== iri) {
+        return label;
+    }
+    return label.substr(label.lastIndexOf("/") + 1);
+}
 
 
 

@@ -4,7 +4,8 @@ import {fetchConcepts} from "./concept-list-action";
 import {
     conceptsStatusSelector,
     conceptsDataSelector,
-    conceptsFetchErrorSelector
+    conceptsFetchErrorSelector,
+    entitiesSelector
 } from "./concept-list-reducer"
 import {isLoading, hasFailed} from "app-service/http";
 import {ConceptListComponent} from "./concept-list";
@@ -53,11 +54,12 @@ class _ConceptListContainer extends React.Component {
             );
         }
 
-        const {data, labels} = this.props;
+        const {data, labels, entities} = this.props;
         return (
             <ConceptListComponent
                 data={data}
-                labels={labels}/>
+                labels={labels}
+                entities={entities}/>
         )
     }
 
@@ -69,7 +71,8 @@ const mapStateToProps = (state, ownProps) => ({
     "data": conceptsDataSelector(state),
     "error": conceptsFetchErrorSelector(state),
     "labels": labelsSelector(state),
-    "query": state["router"]["location"]["search"]
+    "query": state["router"]["location"]["search"],
+    "entities": entitiesSelector(state)
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

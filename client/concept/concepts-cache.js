@@ -23,6 +23,7 @@ function addDataToCache(payload) {
             jsonld.string(resource, SKOS.prefLabel)).join(" ");
         cache.push({
             "label": sanitizeQueryString(searchLabel),
+            "@id": jsonld.id(resource),
             "resource": resource
         })
     });
@@ -73,20 +74,12 @@ export function selectEntries(queryString) {
     return Promise.resolve({"@graph": output});
 }
 
-// TODO Fetch data from Virtuoso.
-const DATA = {
-    "@graph": [
-        {
-            "@id": "https://ssp.opendata.cz/slovn\u00EDk/legislativn\u00ED/p\u0159edpis/111/2009/pojem/Registr-obyvatel",
-            "@type": "https://ssp.opendata.cz/slovn\u00EDk/z\u00E1kladn\u00ED/pojem/typ-objektu",
-            "http://www.w3.org/2000/01/rdf-schema#subClassOf": {"@id": "https://ssp.opendata.cz/slovn\u00EDk/z\u00E1kladn\u00ED/pojem/objekt-pr\u00E1va"},
-            "http://www.w3.org/2004/02/skos/core#prefLabel": {
-                "@value": "Registr obyvatel",
-                "@language": "cs"
-            },
-            "https://skod.opendata.cz/slovn\u00EDk/aplika\u010Dn\u00ED/excel": "Registr obyvatel (111/2009)",
-            "http://www.w3.org/2004/02/skos/core#inScheme": {"@id": "https://ssp.opendata.cz/slovn\u00EDk/legislativn\u00ED/p\u0159edpis/111/2009/glos\u00E1\u0159"},
-            "https://skod.opendata.cz/slovn\u00EDk/aplika\u010Dn\u00ED/pouzitVGlosari": {"@id": "https://ssp.opendata.cz/slovn\u00EDk/legislativn\u00ED/p\u0159edpis/111/2009/glos\u00E1\u0159"}
+export function selectEntity(iri) {
+    for (let index in cache) {
+        const item = cache[index];
+        if (item["@id"] === iri) {
+            return Promise.resolve({"@graph": [item["resource"]]});
         }
-    ]
-};
+    }
+    return Promise.reject();
+}

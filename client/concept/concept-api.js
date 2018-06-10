@@ -34,4 +34,10 @@ function isConceptResource(resource) {
         types.includes(SSP.Relation);
 }
 
-
+export function loadEntity(jsonLdPayload) {
+    return jsonld.iterateResources(jsonLdPayload, (resource) => {
+        if (isConceptResource(resource)) {
+            return resourceToEntity(resource);
+        }
+    });
+}
