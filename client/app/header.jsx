@@ -30,17 +30,17 @@ export class Header extends React.Component {
                 </NavbarBrand>
                 <form className="form-inline"
                       onSubmit={this.onSubmit}>
-                    <input className="form-control"
+                    <input className="form-control my-2"
                            style={{"width": "20rem"}}
                            type="search"
                            placeholder="Hledaný pojem"
                            aria-label="Hledej"
                            ref={(input) => this.searchText = input}
                     />
-                    <button className="btn my-0 ml-sm-2 btn-outline-success">
+                    <button className="btn my-0 ml-2 btn-outline-success">
                         Hledej
                     </button>
-                    <button className="btn my-0 ml-sm-2 btn-outline-primary"
+                    <button className="btn my-0 ml-2 btn-outline-primary"
                             onClick={this.onVisualise}>
                         Vizualizuj
                     </button>
