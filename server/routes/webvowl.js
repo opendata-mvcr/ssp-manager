@@ -57,25 +57,15 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 CONSTRUCT {
 
   ?pojem a ?typPojmu ;
-    skos:prefLabel ?nazevPojmu ;
-    skos:inScheme ?glosarPojmu ;
+    rdfs:label ?nazevPojmuNazevGlosare ;
     rdfs:subClassOf ?specializovanyPojem1 .
 
-  ?glosarPojmu rdfs:label ?nazevGlosare .
-
   ?zobrazenyPojem a ?typZobrazenehoPojmu ;
-    skos:prefLabel ?nazevZobrazenehoPojmu ;
-    skos:inScheme ?glosarZobrazenehoPojmu .
-
-  ?glosarZobrazenehoPojmu rdfs:label ?nazevGlosareZobrazenehoPojmu .
-
-  ?zobrazenyPojem rdfs:subClassOf ?specializovanyPojem .
+    rdfs:label ?nazevZobrazenehoPojmuNazevGlosare ;
+    rdfs:subClassOf ?specializovanyPojem .
 
   ?specializovanyPojem a ?typSpecializovanehoPojmu ;
-    skos:prefLabel ?nazevSpecializovanehoPojmu ;
-    skos:inScheme ?glosarSpecializovanehoPojmu .
-
-  ?glosarSpecializovanehoPojmu rdfs:label ?nazevGlosareSpecializovanehoPojmu .
+    rdfs:label ?nazevSpecializovanehoPojmuNazevGlosare .
 
 } WHERE {
 
@@ -91,6 +81,8 @@ CONSTRUCT {
   FILTER (?typPojmu != skos:Concept)
 
   ?glosarPojmu rdfs:label ?nazevGlosare .
+
+  BIND(CONCAT(?nazevPojmu, " (", ?nazevGlosare, ")") AS ?nazevPojmuNazevGlosare)
 
   {
     SELECT ?zobrazenyPojem ?pojem
@@ -112,6 +104,8 @@ CONSTRUCT {
 
   ?glosarZobrazenehoPojmu rdfs:label ?nazevGlosareZobrazenehoPojmu .
 
+  BIND(CONCAT(?nazevZobrazenehoPojmu, " (", ?nazevGlosareZobrazenehoPojmu, ")") AS ?nazevZobrazenehoPojmuNazevGlosare)
+
   OPTIONAL {
     ?zobrazenyPojem rdfs:subClassOf ?specializovanyPojem .
 
@@ -122,6 +116,8 @@ CONSTRUCT {
     FILTER (?typSpecializovanehoPojmu != skos:Concept)
 
     ?glosarSpecializovanehoPojmu rdfs:label ?nazevGlosareSpecializovanehoPojmu .
+
+    BIND(CONCAT(?nazevSpecializovanehoPojmu, " (", ?nazevGlosareSpecializovanehoPojmu, ")") AS ?nazevSpecializovanehoPojmuNazevGlosare)
   }
 }`;
 }
