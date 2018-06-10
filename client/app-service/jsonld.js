@@ -1,6 +1,6 @@
 function iterateResources(jsonld, consumer) {
     if (Array.isArray(jsonld)) {
-
+        console.error("iterateResources.isArray");
     } else {
         return iterateResourcesInObject(jsonld, consumer);
     }
