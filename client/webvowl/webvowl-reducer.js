@@ -1,13 +1,18 @@
 import {
     VISUALISE_WEBVOWL_REQUEST,
-    VISUALISE_WEBVOWL_SUCCESS,
+    VISUALISE_WEBVOWL_SHOW_URL,
     VISUALISE_WEBVOWL_FAILED,
-    VISUALISE_WEBVOWL_CANCEL
+    VISUALISE_WEBVOWL_CLOSE
 } from "./webvowl-action";
+
+export const STATUS_LOADING = "STATUS_LOADING";
+export const STATUS_SHOW_URL = "STATUS_SHOW_URL";
+export const STATUS_FAILED = "STATUS_FAILED";
 
 const initialState = {
     "isVisible": false,
-    "message": ""
+    "status": "",
+    "url": ""
 };
 
 const reducerName = "webvowl";
@@ -16,12 +21,12 @@ function reducer(state = initialState, action) {
     switch (action["type"]) {
         case VISUALISE_WEBVOWL_REQUEST:
             return onRequest(state);
-        case VISUALISE_WEBVOWL_SUCCESS:
-            return onRequestSuccess(state);
+        case VISUALISE_WEBVOWL_SHOW_URL:
+            return onShowUtl(state, action);
         case VISUALISE_WEBVOWL_FAILED:
             return onRequestFailed(state);
-        case VISUALISE_WEBVOWL_CANCEL:
-            return onCancel(state);
+        case VISUALISE_WEBVOWL_CLOSE:
+            return onClose(state);
         default:
             return state;
     }
@@ -36,14 +41,16 @@ function onRequest(state) {
     return {
         ...state,
         "isVisible": true,
-        "message": "Preparing data ..."
+        "status": STATUS_LOADING
     }
 }
 
-function onRequestSuccess(state) {
+function onShowUtl(state, action) {
     return {
         ...state,
-        "isVisible": false
+        "isVisible": true,
+        "status": STATUS_SHOW_URL,
+        "url": action["url"]
     }
 }
 
@@ -52,11 +59,11 @@ function onRequestFailed(state) {
     return {
         ...state,
         "isVisible": true,
-        "message": "Operation failed see logs for more details."
+        "status": STATUS_FAILED
     }
 }
 
-function onCancel(state) {
+function onClose(state) {
     return {
         ...state,
         "isVisible": false,
@@ -70,6 +77,10 @@ export function isVisibleSelector(state) {
     return reducerSelector(state)["isVisible"]
 }
 
-export function messageSelector(state) {
-    return reducerSelector(state)["message"]
+export function statusSelector(state) {
+    return reducerSelector(state)["status"]
+}
+
+export function urlSelector(state) {
+    return reducerSelector(state)["url"]
 }

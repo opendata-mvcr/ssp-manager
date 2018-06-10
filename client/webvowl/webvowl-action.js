@@ -3,9 +3,9 @@ import {conceptsDataSelector} from "concept/list/concept-list-reducer";
 import {isVisibleSelector} from "./webvowl-reducer";
 
 export const VISUALISE_WEBVOWL_REQUEST = "VISUALISE_WEBVOWL_REQUEST";
-export const VISUALISE_WEBVOWL_SUCCESS = "VISUALISE_WEBVOWL_SUCCESS";
+export const VISUALISE_WEBVOWL_SHOW_URL = "VISUALISE_WEBVOWL_SHOW_URL";
 export const VISUALISE_WEBVOWL_FAILED = "VISUALISE_WEBVOWL_FAILED";
-export const VISUALISE_WEBVOWL_CANCEL = "VISUALISE_WEBVOWL_CANCEL";
+export const VISUALISE_WEBVOWL_CLOSE = "VISUALISE_WEBVOWL_CLOSE";
 
 export function visualiseState() {
     return (dispatch, getState) => {
@@ -15,8 +15,12 @@ export function visualiseState() {
         const body = {"iris": iris};
         postJson("./api/v1/webvowl", body).then((response) => {
             if (isVisibleSelector(getState())) {
-                openWebVowl(response);
-                dispatch(requestSuccess(response));
+                const url = getWebOvwlUrl(response);
+                if (openWebVowl(url)) {
+                    dispatch(close(response));
+                } else {
+                    dispatch(showUrl(url))
+                }
             }
         }).catch((error) => {
             console.error("", error);
@@ -32,16 +36,19 @@ function request() {
     }
 }
 
-function openWebVowl(response) {
-    const dataUrl = encodeURIComponent(response["iri"]);
-    const url = "http://www.visualdataweb.de/webvowl/#iri=" + dataUrl;
-    window.open(url, "_blank");
+function getWebOvwlUrl(response) {
+    return "http://www.visualdataweb.de/webvowl/#iri=" +
+        encodeURI(response["iri"]);
 }
 
+function openWebVowl(url) {
+    return window.open(url, "_blank") !== null;
+}
 
-function requestSuccess() {
+function showUrl(url) {
     return {
-        "type": VISUALISE_WEBVOWL_SUCCESS
+        "type": VISUALISE_WEBVOWL_SHOW_URL,
+        "url": url
     }
 }
 
@@ -51,8 +58,8 @@ function requestFailed() {
     }
 }
 
-export function cancel() {
+export function close() {
     return {
-        "type": VISUALISE_WEBVOWL_CANCEL
+        "type": VISUALISE_WEBVOWL_CLOSE
     }
 }

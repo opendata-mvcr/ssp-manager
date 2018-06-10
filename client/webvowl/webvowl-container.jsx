@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
-import {cancel} from "./webvowl-action";
-import {isVisibleSelector, messageSelector} from "./webvowl-reducer";
+import {close} from "./webvowl-action";
+import {isVisibleSelector, statusSelector, urlSelector} from "./webvowl-reducer";
 import {WebVowl} from "./webvowl";
 
 class _WebVowlContainer extends React.PureComponent {
@@ -10,8 +10,9 @@ class _WebVowlContainer extends React.PureComponent {
             return null;
         }
         return (
-            <WebVowl message={this.props.message}
-                     cancel={this.props.cancel}/>
+            <WebVowl status={this.props.status}
+                     url={this.props.url}
+                     close={this.props.close}/>
         )
     }
 }
@@ -19,11 +20,12 @@ class _WebVowlContainer extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => ({
     "isVisible": isVisibleSelector(state),
-    "message": messageSelector(state)
+    "status": statusSelector(state),
+    "url": urlSelector(state)
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    "cancel": () => dispatch(cancel())
+    "close": () => dispatch(close())
 });
 
 export const WebVowlContainer = connect(
