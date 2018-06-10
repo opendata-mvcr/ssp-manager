@@ -8,11 +8,17 @@ export class Header extends React.Component {
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onVisualise = this.onVisualise.bind(this);
     }
 
     onSubmit(event) {
         event.preventDefault();
         this.props.onSearch(this.searchText.value)
+    }
+
+    onVisualise(event) {
+        event.preventDefault();
+        this.props.onVisualise();
     }
 
     render() {
@@ -24,15 +30,19 @@ export class Header extends React.Component {
                 </NavbarBrand>
                 <form className="form-inline"
                       onSubmit={this.onSubmit}>
-                    <input className="form-control mr-2"
+                    <input className="form-control"
                            style={{"width": "20rem"}}
                            type="search"
                            placeholder="Hledaný pojem"
                            aria-label="Hledej"
                            ref={(input) => this.searchText = input}
                     />
-                    <button className="btn my-2 my-sm-0 btn-outline-success">
+                    <button className="btn my-0 ml-sm-2 btn-outline-success">
                         Hledej
+                    </button>
+                    <button className="btn my-0 ml-sm-2 btn-outline-primary"
+                            onClick={this.onVisualise}>
+                        Vizualizuj
                     </button>
                 </form>
             </Navbar>
@@ -42,5 +52,6 @@ export class Header extends React.Component {
 }
 
 Header.propTypes = {
-    "onSearch": PropTypes.func.isRequired
+    "onSearch": PropTypes.func.isRequired,
+    "onVisualise": PropTypes.func.isRequired
 };

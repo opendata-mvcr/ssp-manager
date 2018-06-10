@@ -1,5 +1,5 @@
 import {default as jsonld, helpers} from "app-service/jsonld";
-import {SKOS, APP, SSP} from "./vocabulary";
+import {SKOS, SSP} from "./vocabulary";
 import {getJson} from "app-service/http";
 
 let cache = null;

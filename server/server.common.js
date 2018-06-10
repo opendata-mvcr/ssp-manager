@@ -5,6 +5,7 @@ function initializeApi(app) {
 function initializeApiRoutes(app) {
     app.use("/api/v1/concepts", require("./routes/concepts"));
     app.use("/api/v1/labels", require("./routes/labels"));
+    app.use("/api/v1/webvowl", require("./routes/webvowl"));
 }
 
 function start(app) {

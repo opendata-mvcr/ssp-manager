@@ -8,3 +8,6 @@
 # Generated directories.
 node_modules/
 dist/
+
+# Data directories.
+data/
