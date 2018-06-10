@@ -1,14 +1,5 @@
 function initializeApi(app) {
-    initializeParsers(app);
     initializeApiRoutes(app);
-}
-
-function initializeParsers(app) {
-    const bodyParser = require("body-parser");
-    // Parse application/x-www-form-urlencoded.
-    app.use(bodyParser.urlencoded({"extended": false}));
-    // Parse application/json.
-    app.use(bodyParser.json());
 }
 
 function initializeApiRoutes(app) {
