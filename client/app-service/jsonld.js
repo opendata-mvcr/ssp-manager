@@ -170,5 +170,5 @@ function stringToArray(value) {
 }
 
 export const helpers = {
-    "stringToArray" : stringToArray
+    "stringToArray": stringToArray
 };
