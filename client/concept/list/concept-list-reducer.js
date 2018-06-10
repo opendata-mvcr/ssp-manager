@@ -8,7 +8,7 @@ import {
     STATUS_FAILED,
     STATUS_FETCHED,
     STATUS_FETCHING
-} from "../../app-service/http";
+} from "app-service/http";
 
 const initialState = {
     "status": STATUS_INITIAL,

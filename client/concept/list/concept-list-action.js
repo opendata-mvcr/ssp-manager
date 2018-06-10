@@ -4,7 +4,6 @@ import {fetchLabel} from "app-service/labels";
 
 export const FETCH_CONCEPTS_REQUEST = "FETCH_CONCEPTS_REQUEST";
 export const FETCH_CONCEPTS_SUCCESS = "FETCH_CONCEPTS_SUCCESS";
-export const FETCH_CONCEPTS_FAILED = "FETCH_CONCEPTS_FAILED";
 
 export function fetchConcepts(queryString) {
     return (dispatch) => {
