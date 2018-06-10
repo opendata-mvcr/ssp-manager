@@ -10,7 +10,8 @@ function _DefaultLayout(props) {
     return (
         <div>
             <Header onSearch={props.onSearch} onVisualise={props.onVisualise}/>
-            <div style={{"height": "4rem"}}/>
+            {/* On small devices the menu is bigger, so use extra space. */}
+            <div style={{"height": "5rem"}} className="my-5 my-sm-0"/>
             {React.cloneElement(props.children, props)}
             {getStaticComponents()}
         </div>
