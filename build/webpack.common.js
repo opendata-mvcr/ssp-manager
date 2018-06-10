@@ -8,7 +8,7 @@ module.exports = {
     "output": {
         "path": path.join(__dirname, "..", "dist"),
         "filename": "bundle.js",
-        "publicPath": "/"
+        "publicPath": "./"
     },
     "resolve": {
         // This allow us to use absolute paths for modules inside the
