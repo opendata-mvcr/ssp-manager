@@ -50,9 +50,7 @@ module.exports = merge(common, {
         }),
         new MiniCssExtractPlugin({
             "filename": "main.[hash].css"
-        }),
-        new webpack.DefinePlugin({
-            "process.env.NODE_ENV": JSON.stringify("production")
         })
     ]
 });
+
