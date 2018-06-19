@@ -1,5 +1,7 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const configuration = require("../configuration");
 
 module.exports = {
     "entry": [
@@ -31,6 +33,9 @@ module.exports = {
             "filename": "index.html",
             "template": path.join(__dirname, "..", "public", "index.html"),
             "inject": true
+        }),
+        new webpack.DefinePlugin({
+            "GLOBAL_CONFIG.WEBOVWL": JSON.stringify(configuration.webvowl)
         })
     ]
 };

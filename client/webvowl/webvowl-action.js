@@ -37,8 +37,7 @@ function request() {
 }
 
 function getWebOvwlUrl(response) {
-    return "http://www.visualdataweb.de/webvowl/#iri=" +
-        encodeURI(response["iri"]);
+    return GLOBAL_CONFIG.WEBOVWL + "#iri=" + encodeURI(response["iri"]);
 }
 
 function openWebVowl(url) {
