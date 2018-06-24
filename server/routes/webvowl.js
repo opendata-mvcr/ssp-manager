@@ -58,11 +58,11 @@ CONSTRUCT {
 
   ?pojem a ?typPojmu ;
     rdfs:label ?nazevPojmuNazevGlosare ;
-    rdfs:subClassOf ?specializovanyPojem1 .
+    skos:broader ?specializovanyPojem1 .
 
   ?zobrazenyPojem a ?typZobrazenehoPojmu ;
     rdfs:label ?nazevZobrazenehoPojmuNazevGlosare ;
-    rdfs:subClassOf ?specializovanyPojem .
+    skos:broader ?specializovanyPojem .
 
   ?specializovanyPojem a ?typSpecializovanehoPojmu ;
     rdfs:label ?nazevSpecializovanehoPojmuNazevGlosare .
@@ -76,7 +76,7 @@ CONSTRUCT {
   ?pojem a ?typPojmu ;
     skos:prefLabel ?nazevPojmu ;
     skos:inScheme ?glosarPojmu ;
-    rdfs:subClassOf ?specializovanyPojem1 .
+    skos:broader ?specializovanyPojem1 .
 
   FILTER (?typPojmu != skos:Concept)
 
@@ -87,12 +87,12 @@ CONSTRUCT {
   {
     SELECT ?zobrazenyPojem ?pojem
     WHERE {
-      ?pojem rdfs:subClassOf/rdfs:subClassOf* ?zobrazenyPojem .
+      ?pojem skos:broader/skos:broader* ?zobrazenyPojem .
     }
   } UNION {
     SELECT ?zobrazenyPojem ?pojem
     WHERE {
-      ?zobrazenyPojem rdfs:subClassOf/rdfs:subClassOf* ?pojem .
+      ?zobrazenyPojem skos:broader/skos:broader* ?pojem .
     }
   }
 
@@ -107,7 +107,7 @@ CONSTRUCT {
   BIND(CONCAT(?nazevZobrazenehoPojmu, " (", ?nazevGlosareZobrazenehoPojmu, ")") AS ?nazevZobrazenehoPojmuNazevGlosare)
 
   OPTIONAL {
-    ?zobrazenyPojem rdfs:subClassOf ?specializovanyPojem .
+    ?zobrazenyPojem skos:broader ?specializovanyPojem .
 
     ?specializovanyPojem a ?typSpecializovanehoPojmu ;
       skos:prefLabel ?nazevSpecializovanehoPojmu ;

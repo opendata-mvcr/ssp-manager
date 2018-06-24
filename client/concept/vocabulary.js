@@ -15,7 +15,8 @@ export const APP = {
 const SKOS_PREFIX = "http://www.w3.org/2004/02/skos/core#";
 export const SKOS = {
     "prefLabel" : SKOS_PREFIX + "prefLabel",
-    "inScheme" : SKOS_PREFIX + "inScheme"
+    "inScheme" : SKOS_PREFIX + "inScheme",
+    "broader" : SKOS_PREFIX + "broader"
 };
 
 const DCT_PREFIX = "http://purl.org/dc/terms/";

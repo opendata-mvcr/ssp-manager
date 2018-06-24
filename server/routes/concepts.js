@@ -16,74 +16,73 @@ function createConceptFunction() {
 }
 
 function createConceptSparqlQuery() {
-    return "" +
-        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-        "PREFIX dct: <http://purl.org/dc/terms/>\n" +
-        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-        "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
-        "PREFIX dcat: <http://www.w3.org/ns/dcat#>\n" +
-        "\n" +
-        "PREFIX ssp: <https://ssp.opendata.cz/slovník/základní/pojem/>\n" +
-        "PREFIX app: <https://skod.opendata.cz/slovník/aplikační/>\n" +
-        "\n" +
-        "CONSTRUCT {\n" +
-        "\n" +
-        "  ?pojem a ?typPojmu ; \n" +
-        "    skos:prefLabel ?nazevPojmu ; \n" +
-        "    skos:inScheme ?glosar ; \n" +
-        "    rdfs:subClassOf ?specializovanyPojem ; \n" +
-        "    app:pouzitVGlosari ?odkazujiciGlosar ; \n" +
-        "    app:excel ?excel .\n" +
-        "\n" +
-        "} WHERE {\n" +
-        "\n" +
-        "  VALUES ?typPojmu {ssp:typ-objektu ssp:typ-vlastnosti ssp:typ-vztahu}\n" +
-        "\n" +
-        "  ?pojem a ?typPojmu ;\n" +
-        "    skos:prefLabel ?nazevPojmu ;\n" +
-        "    skos:inScheme ?glosar .\n" +
-        "\n" +
-        "  ?glosar rdfs:label ?nazevGlosare .\n" +
-        "  \n" +
-        "  OPTIONAL {\n" +
-        "    ?glosar dct:conformsTo ?predpis .\n" +
-        "\t\n" +
-        "    GRAPH <https://esbirka.opendata.cz/zdroj/datová-sada/pspcz> {\n" +
-        "      ?predpis dct:identifier ?cisloPredpisuWithSuffix .\n" +
-        "      BIND(REPLACE(?cisloPredpisuWithSuffix, \"[\\\\s\\\\x{00A0}]+Sb\\\\.\", \"\") AS ?cisloPredpisu)\n" +
-        "    }\n" +
-        "\t\n" +
-        "  }\n" +
-        "\n" +
-        "  OPTIONAL {\n" +
-        "    ?pojem rdfs:subClassOf ?specializovanyPojem .\n" +
-        "  }\n" +
-        "  \n" +
-        "  BIND(\n" +
-        "    COALESCE(\n" +
-        "\t  CONCAT(?nazevPojmu, \" (\", ?cisloPredpisu, \")\"),\n" +
-        "\t  ?nazevPojmu\n" +
-        "\t) AS ?excel\n" +
-        "  )\n" +
-        "\n" +
-        "  OPTIONAL {\n" +
-        "    {\n" +
-        "      ?odkazujiciPojem rdfs:subClassOf ?pojem ;\n" +
-        "        skos:inScheme ?pouzitVGlosari .\n" +
-        "    } UNION {\n" +
-        "      ?odkazujiciPojem rdfs:domain ?pojem.\n" +
-        "    } UNION {\n" +
-        "      ?odkazujiciPojem rdfs:domain/owl:unionOf ?pojem .\n" +
-        "    } UNION {\n" +
-        "      ?odkazujiciPojem rdfs:range ?pojem.\n" +
-        "    } UNION {\n" +
-        "      ?odkazujiciPojem rdfs:range/owl:unionOf ?pojem .\n" +
-        "    }\n" +
-        "\n" +
-        "    ?odkazujiciPojem skos:inScheme ?odkazujiciGlosar .\n" +
-        "  }\n" +
-        "\n" +
-        "}\n";
+    return `
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+
+PREFIX ssp: <https://ssp.opendata.cz/slovník/základní/pojem/>
+PREFIX app: <https://skod.opendata.cz/slovník/aplikační/>
+
+CONSTRUCT {
+
+  ?pojem a ?typPojmu ; 
+    skos:prefLabel ?nazevPojmu ; 
+    skos:inScheme ?glosar ; 
+    skos:broader ?specializovanyPojem ; 
+    app:pouzitVGlosari ?odkazujiciGlosar ; 
+    app:excel ?excel .
+
+} WHERE {
+
+  VALUES ?typPojmu {ssp:typ-objektu ssp:typ-vlastnosti ssp:typ-vztahu}
+
+  ?pojem a ?typPojmu ;
+    skos:prefLabel ?nazevPojmu ;
+    skos:inScheme ?glosar .
+
+  ?glosar rdfs:label ?nazevGlosare .
+  
+  OPTIONAL {
+    ?glosar dct:conformsTo ?predpis .
+
+    GRAPH <https://esbirka.opendata.cz/zdroj/datová-sada/pspcz> {
+      ?predpis dct:identifier ?cisloPredpisuWithSuffix .
+      BIND(REPLACE(?cisloPredpisuWithSuffix, "[\\\\s\\\\x{00A0}]+Sb\\\\.", "") AS ?cisloPredpisu)
+    }
+
+  }
+
+  OPTIONAL {
+    ?pojem skos:broader ?specializovanyPojem .
+  }
+  
+  BIND(
+    COALESCE(
+     CONCAT(?nazevPojmu, " (", ?cisloPredpisu, ")"), ?nazevPojmu) AS ?excel
+  )
+
+  OPTIONAL {
+    {
+      ?odkazujiciPojem skos:broader ?pojem ;
+        skos:inScheme ?pouzitVGlosari .
+    } UNION {
+      ?odkazujiciPojem rdfs:domain ?pojem.
+    } UNION {
+      ?odkazujiciPojem rdfs:domain/owl:unionOf ?pojem .
+    } UNION {
+       ?odkazujiciPojem rdfs:range ?pojem.
+    } UNION {
+      ?odkazujiciPojem rdfs:range/owl:unionOf ?pojem .
+    }
+
+    ?odkazujiciPojem skos:inScheme ?odkazujiciGlosar .
+  }
+
+}
+`;
 }
 
 function pipeSparqlConstruct(res, query, endpoint) {

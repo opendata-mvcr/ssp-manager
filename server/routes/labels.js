@@ -17,21 +17,16 @@ function createLabelsFunction() {
 }
 
 function createConceptSparqlQuery(iri) {
-    return "" +
-        "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-        "\n" +
-        "CONSTRUCT {\n" +
-        "\n" +
-        " <" + iri + "> ?labelPredicate ?label. \n" +
-        "\n" +
-        "} WHERE { \n" +
-        " \n" +
-        " VALUES ?labelPredicate {skos:prefLabel rdfs:label } \n" +
-        "\n" +
-        " <" + iri + "> ?labelPredicate ?label. \n" +
-        "\n" +
-        "}\n";
+    return `
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+ <` + iri + `> ?labelPredicate ?label. 
+} WHERE { 
+ VALUES ?labelPredicate {skos:prefLabel rdfs:label } 
+ <` + iri + `> ?labelPredicate ?label. 
+}`;
 }
 
 function pipeSparqlConstruct(res, query, endpoint) {

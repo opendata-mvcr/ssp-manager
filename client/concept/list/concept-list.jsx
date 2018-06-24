@@ -124,7 +124,7 @@ const ConceptTable = ({title, data, labels, entities}) => {
 };
 
 const TableRow = ({data, labels, entities}) => {
-    const subClassOf = createSubClassOfCell(data, labels, entities);
+    const broader = createBroaderCell(data, labels, entities);
     const usedInGlossary = [];
     data["usedInGlossary"].forEach((iri) => {
         usedInGlossary.push(selectLabel(labels, iri));
@@ -141,22 +141,22 @@ const TableRow = ({data, labels, entities}) => {
                 <a href={iri}>{selectLabel(labels, data)}</a>
             </td>
             <td>{usedInGlossary}</td>
-            <td>{subClassOf}</td>
+            <td>{broader}</td>
             <td>{data["excel"]}</td>
         </tr>
     )
 };
 
-function createSubClassOfCell(data, labels, entities) {
-    const subClassOf = [];
-    data["subClassOf"].forEach((iri) => {
-        if (subClassOf.length > 0) {
-            subClassOf.push((
+function createBroaderCell(data, labels, entities) {
+    const broader = [];
+    data["broader"].forEach((iri) => {
+        if (broader.length > 0) {
+            broader.push((
                 <br key={iri + "-br"}/>
             ));
         }
 
-        subClassOf.push((
+        broader.push((
             <a href={iri} target="_blank" key={iri}>
                 {prepareLabelForConcept(labels, iri)}
             </a>
@@ -164,24 +164,24 @@ function createSubClassOfCell(data, labels, entities) {
 
         const concept = entities[iri];
         if (concept !== undefined && concept["scheme"].length > 0) {
-            subClassOf.push(" (");
+            broader.push(" (");
             let isFirst = true;
             concept["scheme"].forEach((scheme) => {
                 if (isFirst) {
                     isFirst = false;
                 } else {
-                    subClassOf.push(" ,");
+                    broader.push(" ,");
                 }
-                subClassOf.push((
+                broader.push((
                     <a href={scheme} target="_blank" key={iri + "-scheme"}>
                         {selectLabel(labels, scheme)}
                     </a>
                 ));
             });
-            subClassOf.push(")");
+            broader.push(")");
         }
     });
-    return subClassOf;
+    return broader;
 }
 
 function prepareLabelForConcept(labels, iri) {

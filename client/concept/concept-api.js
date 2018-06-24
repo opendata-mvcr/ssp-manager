@@ -21,7 +21,7 @@ function resourceToEntity(resource) {
         "@type": jsonld.types(resource),
         "sortLabel": sortLabel,
         "scheme": jsonld.refs(resource, SKOS.inScheme),
-        "subClassOf": jsonld.refs(resource, RDFS.subClassOf),
+        "broader": jsonld.refs(resource, SKOS.broader),
         "usedInGlossary": jsonld.refs(resource, APP.pouzitVGlosari),
         "excel": jsonld.values(resource, APP.excel)
     }
