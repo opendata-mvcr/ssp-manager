@@ -16,7 +16,7 @@ export function fetchConcepts(queryString) {
                 const entities = loadEntities(payload);
                 dispatch(fetchConceptsSuccess(payload, entities));
                 fetchLabels(dispatch, entities);
-                fetchSubClassOf(dispatch, entities);
+                fetchBroader(dispatch, entities);
             }).catch((error) => {
             if (error["type"] === "http") {
                 dispatch(fetchConceptsFailed(error));
@@ -50,10 +50,10 @@ function fetchLabels(dispatch, entities) {
     toRequest.forEach((iri) => dispatch(fetchLabel(iri)));
 }
 
-function fetchSubClassOf(dispatch, entities) {
+function fetchBroader(dispatch, entities) {
     const toRequest = new Set();
     entities.forEach((entity) => {
-        entity["subClassOf"].forEach((iri) => toRequest.add(iri));
+        entity["broader"].forEach((iri) => toRequest.add(iri));
     });
     // Remove those already loaded.
     entities.forEach((entity) => {
