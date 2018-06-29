@@ -18,23 +18,3 @@ ReactDOM.render((
         </ConnectedRouter>
     </Provider>
 ), document.getElementById("app"));
-
-
-
-// import swal from "sweetalert";
-// import React from "react";
-//
-// import {Button} from "reactstrap";
-//
-// (() => {
-//     ReactDOM.render((
-//         <div>
-//             <Button color="danger">Danger!</Button>
-//         </div>
-//     ), document.getElementById("app"));
-// })();
-//
-//
-// function showDialog() {
-//     swal("Here"s the title!", "...and here"s the text!");
-// }
