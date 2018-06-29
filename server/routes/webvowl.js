@@ -56,16 +56,13 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 CONSTRUCT {
 
-  ?pojem a ?typPojmu ;
-    rdfs:label ?nazevPojmuNazevGlosare ;
-    skos:broader ?specializovanyPojem1 .
+  ?pojem rdfs:label ?nazevPojmuNazevGlosare ;
+    rdfs:subClassOf ?specializovanyPojem1 .
 
-  ?zobrazenyPojem a ?typZobrazenehoPojmu ;
-    rdfs:label ?nazevZobrazenehoPojmuNazevGlosare ;
-    skos:broader ?specializovanyPojem .
+  ?zobrazenyPojem rdfs:label ?nazevZobrazenehoPojmuNazevGlosare ;
+    rdfs:subClassOf ?specializovanyPojem .
 
-  ?specializovanyPojem a ?typSpecializovanehoPojmu ;
-    rdfs:label ?nazevSpecializovanehoPojmuNazevGlosare .
+  ?specializovanyPojem rdfs:label ?nazevSpecializovanehoPojmuNazevGlosare .
 
 } WHERE {
 
