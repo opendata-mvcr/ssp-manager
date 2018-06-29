@@ -4,7 +4,7 @@ import {SSP} from "../vocabulary";
 import {Container} from "reactstrap";
 import {selectLabel} from "app-service/labels";
 
-export const ConceptListComponent = ({data, labels, entities}) => {
+export const ConceptListComponent = ({data, labels, entities, visualiseResource}) => {
     if (data.length === 0) {
         return (
             <div style={{"marginTop": "4rem", "textAlign": "center"}}>
@@ -21,7 +21,8 @@ export const ConceptListComponent = ({data, labels, entities}) => {
                     scheme={key}
                     data={groups[key]}
                     labels={labels}
-                    entities={entities}/>
+                    entities={entities}
+                    visualiseResource={visualiseResource}/>
             ))}
         </Container>
     )
@@ -30,7 +31,8 @@ export const ConceptListComponent = ({data, labels, entities}) => {
 ConceptListComponent.propTypes = {
     "data": PropTypes.array.isRequired,
     "labels": PropTypes.any.isRequired,
-    "entities": PropTypes.object.isRequired
+    "entities": PropTypes.object.isRequired,
+    "visualiseResource": PropTypes.func.isRequired
 };
 
 function splitByScheme(data) {
@@ -47,7 +49,7 @@ function splitByScheme(data) {
     return output;
 }
 
-const ConceptGroup = ({scheme, data, labels, entities}) => {
+const ConceptGroup = ({scheme, data, labels, entities, visualiseResource}) => {
     const dataByType = splitByType(data);
     return (
         <div>
@@ -60,17 +62,20 @@ const ConceptGroup = ({scheme, data, labels, entities}) => {
                 title="Typ objektu"
                 data={dataByType[SSP.Object]}
                 labels={labels}
-                entities={entities}/>
+                entities={entities}
+                visualiseResource={visualiseResource}/>
             <ConceptTable
                 title="Typ vlastnosti"
                 data={dataByType[SSP.Property]}
                 labels={labels}
-                entities={entities}/>
+                entities={entities}
+                visualiseResource={visualiseResource}/>
             <ConceptTable
                 title="Typ vztahu"
                 data={dataByType[SSP.Relation]}
                 labels={labels}
-                entities={entities}/>
+                entities={entities}
+                visualiseResource={visualiseResource}/>
         </div>
     )
 };
@@ -95,7 +100,7 @@ function splitByType(data) {
 
 }
 
-const ConceptTable = ({title, data, labels, entities}) => {
+const ConceptTable = ({title, data, labels, entities, visualiseResource}) => {
     if (data.length === 0) {
         return null;
     }
@@ -114,8 +119,11 @@ const ConceptTable = ({title, data, labels, entities}) => {
                 </thead>
                 <tbody>
                 {data.map((item) => (
-                    <TableRow key={item["@id"]} data={item} labels={labels}
-                              entities={entities}/>
+                    <TableRow key={item["@id"]}
+                              data={item}
+                              labels={labels}
+                              entities={entities}
+                              visualiseResource={visualiseResource}/>
                 ))}
                 </tbody>
             </table>
@@ -123,7 +131,7 @@ const ConceptTable = ({title, data, labels, entities}) => {
     );
 };
 
-const TableRow = ({data, labels, entities}) => {
+const TableRow = ({data, labels, entities, visualiseResource}) => {
     const broader = createBroaderCell(data, labels, entities);
     const usedInGlossary = [];
     data["usedInGlossary"].forEach((iri) => {
@@ -138,6 +146,11 @@ const TableRow = ({data, labels, entities}) => {
     return (
         <tr>
             <td>
+                <button className="btn btn-sm mr-1 btn-outline-primary"
+                        onClick={() => visualiseResource(data["@id"])}>
+                    <span className="fa fa-search">
+                    </span>
+                </button>
                 <a href={iri}>{selectLabel(labels, data)}</a>
             </td>
             <td>{usedInGlossary}</td>

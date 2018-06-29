@@ -9,26 +9,30 @@ export const VISUALISE_WEBVOWL_CLOSE = "VISUALISE_WEBVOWL_CLOSE";
 
 export function visualiseState() {
     return (dispatch, getState) => {
-        dispatch(request());
         const concepts = conceptsDataSelector(getState());
-        const iris = concepts.map((object) => object["@id"]);
-        const body = {"iris": iris};
-        postJson("./api/v1/webvowl", body).then((response) => {
-            if (isVisibleSelector(getState())) {
-                const url = getWebOvwlUrl(response);
-                if (openWebVowl(url)) {
-                    dispatch(close(response));
-                } else {
-                    dispatch(showUrl(url))
-                }
-            }
-        }).catch((error) => {
-            console.error("", error);
-            requestFailed(error);
-        });
+        const resources = concepts.map((object) => object["@id"]);
+        visualiseResources(dispatch, getState, resources)
     };
 }
 
+
+function visualiseResources(dispatch, getState, resources) {
+    dispatch(request());
+    const body = {"iris": resources};
+    postJson("./api/v1/webvowl", body).then((response) => {
+        if (isVisibleSelector(getState())) {
+            const url = getWebOvwlUrl(response);
+            if (openWebVowl(url)) {
+                dispatch(close(response));
+            } else {
+                dispatch(showUrl(url))
+            }
+        }
+    }).catch((error) => {
+        console.error("", error);
+        requestFailed(error);
+    });
+}
 
 function request() {
     return {
@@ -61,4 +65,10 @@ export function close() {
     return {
         "type": VISUALISE_WEBVOWL_CLOSE
     }
+}
+
+export function visualiseResource(resource) {
+    return (dispatch, getState) => {
+        visualiseResources(dispatch, getState, [resource])
+    };
 }

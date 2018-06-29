@@ -12,6 +12,8 @@ import {ConceptListComponent} from "./concept-list";
 import {labelsSelector} from "app-service/labels";
 import {parse as parseQueryString} from "query-string";
 import {LoadingIndicator} from "app-ui/loading";
+import {hot} from "react-hot-loader";
+import {visualiseResource} from "webvowl";
 
 // TODO Add init and clean up methods.
 
@@ -59,7 +61,8 @@ class _ConceptListContainer extends React.Component {
             <ConceptListComponent
                 data={data}
                 labels={labels}
-                entities={entities}/>
+                entities={entities}
+                visualiseResource={this.props.visualiseResource}/>
         )
     }
 
@@ -78,10 +81,13 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
     "fetch": (query) => {
         dispatch(fetchConcepts(query));
+    },
+    "visualiseResource": (resource) => {
+        dispatch(visualiseResource(resource));
     }
 });
 
-export const ConceptListContainer = connect(
+export const ConceptListContainer = hot(module)(connect(
     mapStateToProps,
     mapDispatchToProps)
-(_ConceptListContainer);
+(_ConceptListContainer));
