@@ -20,24 +20,29 @@ function createConceptSparqlQuery() {
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
 
-PREFIX ssp: <https://ssp.opendata.cz/slovník/základní/pojem/>
+PREFIX z-sgov-pojem: <https://slovnik.gov.cz/základní/pojem/>
+PREFIX v-sgov-pojem: <https://slovnik.gov.cz/veřejný-sektor/pojem/>
+
 PREFIX app: <https://skod.opendata.cz/slovník/aplikační/>
 
 CONSTRUCT {
 
-  ?pojem a ?typPojmu ; 
-    skos:prefLabel ?nazevPojmu ; 
-    skos:inScheme ?glosar ; 
-    skos:broader ?specializovanyPojem ; 
-    app:pouzitVGlosari ?odkazujiciGlosar ; 
+  ?pojem a ?typPojmu ; # typ pojmu
+    skos:prefLabel ?nazevPojmu ; # název pojmu
+    skos:inScheme ?glosar ; # glosář
+    skos:broader ?specializovanyPojem ; # specializovaný pojem
+    app:pouzitVGlosari ?nazevGlosareKdeJePouzit ; #název glosáře kde je použit
     app:excel ?excel .
+  ?glosar rdfs:label ?nazevGlosare . # název glosáře
 
-} WHERE {
+} 
+WHERE {
 
-  VALUES ?typPojmu {ssp:typ-objektu ssp:typ-vlastnosti ssp:typ-vztahu}
+  VALUES ?typPojmu {z-sgov-pojem:typ-objektu z-sgov-pojem:typ-vlastnosti z-sgov-pojem:typ-vztahu}
 
   ?pojem a ?typPojmu ;
     skos:prefLabel ?nazevPojmu ;
@@ -46,13 +51,11 @@ CONSTRUCT {
   ?glosar rdfs:label ?nazevGlosare .
   
   OPTIONAL {
-    ?glosar dct:conformsTo ?predpis .
-
-    GRAPH <https://esbirka.opendata.cz/zdroj/datová-sada/pspcz> {
-      ?predpis dct:identifier ?cisloPredpisuWithSuffix .
-      BIND(REPLACE(?cisloPredpisuWithSuffix, "[\\\\s\\\\x{00A0}]+Sb\\\\.", "") AS ?cisloPredpisu)
-    }
-
+    ?glosar v-sgov-pojem:má-zdrojový-předpis ?predpis .
+	
+    ?predpis dct:identifier ?cisloPredpisuWithSuffix .
+    BIND(REPLACE(?cisloPredpisuWithSuffix, "[\\\\s\\\\x{00A0}]+Sb\\\\.", "") AS ?cisloPredpisu)
+	
   }
 
   OPTIONAL {
@@ -61,7 +64,9 @@ CONSTRUCT {
   
   BIND(
     COALESCE(
-     CONCAT(?nazevPojmu, " (", ?cisloPredpisu, ")"), ?nazevPojmu) AS ?excel
+	  CONCAT(?nazevPojmu, " (", ?cisloPredpisu, ")"),
+	  ?nazevPojmu
+	) AS ?excel
   )
 
   OPTIONAL {
@@ -69,16 +74,12 @@ CONSTRUCT {
       ?odkazujiciPojem skos:broader ?pojem ;
         skos:inScheme ?pouzitVGlosari .
     } UNION {
-      ?odkazujiciPojem rdfs:domain ?pojem.
-    } UNION {
-      ?odkazujiciPojem rdfs:domain/owl:unionOf ?pojem .
-    } UNION {
-       ?odkazujiciPojem rdfs:range ?pojem.
-    } UNION {
-      ?odkazujiciPojem rdfs:range/owl:unionOf ?pojem .
+      ?odkazujiciPojem (rdfs:domain|rdfs:range)/(owl:unionOf/rdf:rest*/rdf:first)? ?pojem .
     }
 
     ?odkazujiciPojem skos:inScheme ?odkazujiciGlosar .
+
+    ?odkazujiciGlosar rdfs:label ?nazevGlosareKdeJePouzit .
   }
 
 }
@@ -86,10 +87,14 @@ CONSTRUCT {
 }
 
 function pipeSparqlConstruct(res, query, endpoint) {
-    const url = endpoint + "?" +
+    let url = endpoint + "?" +
         "format=application%2Fx-json%2Bld&" +
         "timeout=0&" +
         "query=" + encodeURIComponent(query);
+
+    if (config.graph !== undefined && config.graph !== "") {
+        url += "&default-graph-uri=" + encodeURIComponent(config.graph);
+    }
 
     request.get({"url": url}).on("error", (error) => {
         // TODO Error handling.

@@ -1,4 +1,4 @@
-const SSP_PREFIX = "https://ssp.opendata.cz/slovník/základní/pojem/";
+const SSP_PREFIX = "https://slovnik.gov.cz/základní/pojem/";
 
 export const SSP = {
     "Object": SSP_PREFIX + "typ-objektu",
