@@ -9,7 +9,7 @@ module.exports = {
     // URL of WebVOWL frontend.
     , "webvowl": "http://www.visualdataweb.de/webvowl"
     // LP:ETL URL.
-    , "lp-etl": "https://etl.skod.opendata.cz"
+    , "lp-etl": "http://localhost:9080"
     // Pipeline URL.
     , "lp-etl-pipeline": "https://etl.skod.opendata.cz/resources/pipelines/1533896757285"
 };
