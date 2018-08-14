@@ -17,6 +17,10 @@ function initializeWebpack(app) {
     app.use(webpackMiddleware(webpackCompiler, {
         // publicPath starts with '.' we need to skip it.
         "publicPath": webpackConfig.output.publicPath.substr(1),
+        "stats": {
+            "chunks": false,
+            "children": false
+        }
     }));
     // https://github.com/webpack-contrib/webpack-hot-middleware
     const webpackHotMiddleware = require("webpack-hot-middleware");
