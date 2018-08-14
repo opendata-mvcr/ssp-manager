@@ -1,15 +1,13 @@
 import React from "react";
-import {Header} from "./header";
-import {connect} from "react-redux";
-import {push} from "react-router-redux";
+import {Header} from "./header-container";
 import {hot} from "react-hot-loader";
-import {visualiseState} from "webvowl/index"
 import {getRegistered} from "./register";
+
 
 function _DefaultLayout(props) {
     return (
         <div>
-            <Header onSearch={props.onSearch} onVisualise={props.onVisualise}/>
+            <Header/>
             {/* On small devices the menu is bigger, so use extra space. */}
             <div style={{"height": "5rem"}} className="my-5 my-sm-0"/>
             {React.cloneElement(props.children, props)}
@@ -32,7 +30,4 @@ function getStaticComponents() {
     return output;
 }
 
-export const DefaultLayout = hot(module)(connect(null, (dispatch, ownProps) => ({
-    "onSearch": (searchText) => dispatch(push('?search=' + searchText)),
-    "onVisualise": () => dispatch(visualiseState())
-}))(_DefaultLayout));
+export const DefaultLayout = hot(module)(_DefaultLayout);
