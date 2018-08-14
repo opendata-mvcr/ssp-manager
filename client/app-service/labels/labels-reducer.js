@@ -74,7 +74,7 @@ function merge(labels, newLabels) {
 }
 
 function filterEmpty(values) {
-    return values.filter(value => value != "")
+    return values.filter(value => value !== "")
 }
 
 const reducerSelector = (state) => state[reducerName];

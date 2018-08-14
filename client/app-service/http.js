@@ -20,6 +20,10 @@ function json(response) {
     })
 }
 
+export function post(url) {
+    return fetch(url, {"method": "POST"}).then(json);
+}
+
 export function postJson(url, body) {
     return fetch(url, {
         "body": JSON.stringify(body),

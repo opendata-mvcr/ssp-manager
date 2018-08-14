@@ -1,9 +1,12 @@
 import React from "react";
 import {PropTypes} from "prop-types";
-import {Link, push} from "react-router-redux"
+import {push} from "react-router-redux"
 import {Navbar, NavbarBrand, Button} from "reactstrap";
+import {STATUS} from "lp-etl";
 import {visualiseState} from "../webvowl";
 import {connect} from "react-redux";
+import {isFetchingSelector, executePipeline, statusSelector} from "../lp-etl";
+import {HorizontalLoadingSpinner} from "app-ui/loading";
 import {parse as parseQueryString} from "query-string";
 
 class _Header extends React.Component {
@@ -13,6 +16,8 @@ class _Header extends React.Component {
         //
         this.onSubmit = this.onSubmit.bind(this);
         this.onVisualise = this.onVisualise.bind(this);
+        this.onExecute = this.onExecute.bind(this);
+        this.createExecuteButton = this.createExecuteButton.bind(this);
         //
         this.inputRef = React.createRef();
     }
@@ -30,11 +35,6 @@ class _Header extends React.Component {
     onExecute(event) {
         event.preventDefault();
         this.props.onExecute();
-    }
-
-    onReload(event) {
-        event.preventDefault();
-        this.props.onReload();
     }
 
     componentDidMount() {
@@ -66,8 +66,54 @@ class _Header extends React.Component {
                             onClick={this.onVisualise}>
                         Vizualizuj
                     </Button>
+                    {this.createExecuteButton()}
                 </form>
             </Navbar>
+        )
+    }
+
+    createExecuteButton() {
+        let indicator = null;
+        if (this.props.status === STATUS.running) {
+            indicator = (
+                <HorizontalLoadingSpinner style={{"marginLeft": "1rem"}}/>
+            );
+        }
+
+        let disabled = this.props.isFetching;
+        let label;
+        let color = "primary";
+
+        switch (this.props.status) {
+            case STATUS.initial:
+                label = "Přegeneruj";
+                break;
+            case STATUS.running:
+                label = "Generuji";
+                disabled = true;
+                break;
+            case STATUS.finished:
+                label = "Hotovo, prosím stiskni F5";
+                color = "success";
+                disabled = true;
+                break;
+            case STATUS.failed:
+                label = "Chyba";
+                color = "danger";
+                disabled = true;
+                break;
+        }
+
+        return (
+            <Button outline
+                    className="btn my-0 ml-2"
+                    style={{"display": "inline-flex"}}
+                    color={color}
+                    onClick={this.onExecute}
+                    disabled={disabled}>
+                <div>{label}</div>
+                {indicator}
+            </Button>
         )
     }
 
@@ -75,16 +121,22 @@ class _Header extends React.Component {
 
 _Header.propTypes = {
     "onSearch": PropTypes.func.isRequired,
-    "onVisualise": PropTypes.func.isRequired
+    "onVisualise": PropTypes.func.isRequired,
+    "onExecute": PropTypes.func.isRequired,
+    "isFetching": PropTypes.bool.isRequired,
+    "status": PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    "search": parseQueryString(state["router"]["location"]["search"])["search"],
+    "isFetching": isFetchingSelector((state)),
+    "status": statusSelector((state)),
+    "search": parseQueryString(state["router"]["location"]["search"])["search"]
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     "onSearch": (searchText) => dispatch(push('?search=' + searchText)),
-    "onVisualise": () => dispatch(visualiseState())
+    "onVisualise": () => dispatch(visualiseState()),
+    "onExecute": () => dispatch(executePipeline())
 });
 
 export const Header = connect(

@@ -1,4 +1,9 @@
-import {initializeCache, selectEntries, selectEntity} from "../concepts-cache";
+import {
+    initializeCache,
+    selectEntries,
+    selectEntity
+
+} from "../concepts-cache";
 import {loadEntities, loadEntity} from "../concept-api";
 import {fetchLabel} from "app-service/labels";
 
