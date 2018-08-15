@@ -7,7 +7,7 @@ module.exports = {
     // URL of this application, must be accessible to WebVOWL conversion service.
     , "url": "http://localhost:8070"
     // URL of WebVOWL frontend.
-    , "webvowl": "http://www.visualdataweb.de/webvowl"
+    , "webvowl": "https://slovník.gov.cz/webvowl"
     // LP:ETL URL.
     , "lp-etl": "http://localhost:9080"
     // Pipeline URL.
