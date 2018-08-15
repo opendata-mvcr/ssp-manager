@@ -5,7 +5,7 @@ module.exports = {
     // Where to store working data.
     , "working-directory": "./data"
     // URL of this application, must be accessible to WebVOWL conversion service.
-    , "url": "http://localhost"
+    , "url": "http://localhost:8070"
     // URL of WebVOWL frontend.
     , "webvowl": "http://www.visualdataweb.de/webvowl"
     // LP:ETL URL.
