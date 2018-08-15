@@ -102,7 +102,11 @@ function isExecutionRunning() {
 }
 
 function onExecutionStarted(response) {
-    execution.url = response.iri;
+    // This IRI may include public URL, however we want to access directly
+    // using config.etl. URL.
+    let url = response.iri;
+    url = config.etl + url.substr(url.indexOf("/resources/"));
+    execution.url = url;
     execution.status = STATUS.running;
     execution.lastCheck = 0;
 }
