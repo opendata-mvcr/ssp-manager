@@ -1,7 +1,7 @@
 module.exports = {
     "port": 8070
     // Data source.
-    , "spaqrl-endpoint": "https://slovnik.gov.cz/sparql"
+    , "spaqrl-endpoint": "https://slovník.gov.cz/sparql"
     // Where to store working data.
     , "working-directory": "./data"
     // URL of this application, must be accessible to WebVOWL conversion service.
